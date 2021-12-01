@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import (
+	_ "github.com/dschroep/advent-of-code/day1"
+)
 
-func main() {
-	fmt.Println("Merry Christmas!")
-}
+func main() {}
