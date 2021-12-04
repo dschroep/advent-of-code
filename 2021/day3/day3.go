@@ -1,11 +1,7 @@
 package day3
 
-import "fmt"
+import "github.com/dschroep/advent-of-code/common"
 
 func init() {
-	fmt.Printf("[Day 3]\n")
-	fmt.Printf("\t[Level 1]\n")
-	fmt.Printf("\t\t%s\n", solveLvl1())
-	fmt.Printf("\t[Level 2]\n")
-	// fmt.Printf("\t\t%s\n", solveLvl2())
+	common.OutputResults(3, solveLvl1(), "")
 }
