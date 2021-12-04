@@ -1,28 +1,25 @@
 package day2
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/dschroep/advent-of-code/common"
 )
 
 // Solves level 1 of day 2 and returns the result as printable message.
 func solveLvl1() string {
-	file, err := os.Open("day2/input.txt")
+	inputs, err := common.GetFileInput(2)
 	if err != nil {
 		return "Could not open input file. Aborting."
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	var xPos, yPos int
-	for scanner.Scan() {
-		input := strings.Split(scanner.Text(), " ")
-		command := input[0]                   // either "up", "down", or "forward"
-		amount, err := strconv.Atoi(input[1]) // how far the submarine shall move
+	for _, input := range inputs {
+		splitInput := strings.Split(input, " ")
+		command := splitInput[0]                   // either "up", "down", or "forward"
+		amount, err := strconv.Atoi(splitInput[1]) // how far the submarine shall move
 		if err != nil {
 			return "Could not convert string to integer. Aborting."
 		}

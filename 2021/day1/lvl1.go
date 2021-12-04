@@ -1,25 +1,22 @@
 package day1
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
+
+	"github.com/dschroep/advent-of-code/common"
 )
 
 // Solves level 1 of day 1 and returns the result as printable message.
 func solveLvl1() string {
-	file, err := os.Open("day1/input.txt")
+	inputs, err := common.GetFileInput(1)
 	if err != nil {
 		return "Could not open input file. Aborting."
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	var prevMeasurement, totalIncreases int
-	for scanner.Scan() {
-		measurement, err := strconv.Atoi(scanner.Text())
+	for _, input := range inputs {
+		measurement, err := strconv.Atoi(input)
 		if err != nil {
 			return "Could not convert string to integer. Aborting."
 		}

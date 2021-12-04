@@ -1,22 +1,19 @@
 package day3
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/dschroep/advent-of-code/common"
 )
 
 // Solves level 1 of day 3 and returns the result as printable message.
 func solveLvl1() string {
-	file, err := os.Open("day3/input.txt")
+	inputs, err := common.GetFileInput(3)
 	if err != nil {
 		return "Could not open input file. Aborting."
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
 
 	// Idea of this solution:
 	// - Each input row is a binary number of 12 bits -> create slice `values` with size 12
@@ -25,13 +22,13 @@ func solveLvl1() string {
 	// -> If a position's value is positive, '1' was more common
 	// -> If a position's value is negative, '0' was more common
 	values := make([]int, 12)
-	for scanner.Scan() {
-		inputs := strings.Split(scanner.Text(), "")
-		for index, bit := range inputs {
-			switch bit {
-			case "1":
+	for _, input := range inputs {
+		splitInput := strings.Split(input, "")
+
+		for index, bit := range splitInput {
+			if bit == "1" {
 				values[index]++
-			case "0":
+			} else {
 				values[index]--
 			}
 		}

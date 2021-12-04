@@ -1,32 +1,31 @@
 package day1
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
+
+	"github.com/dschroep/advent-of-code/common"
 )
 
 // Solves level 2 of day 1 and returns the result as printable message.
 func solveLvl2() string {
-	file, err := os.Open("day1/input.txt")
+	inputs, err := common.GetFileInput(1)
 	if err != nil {
 		return "Could not open input file. Aborting."
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-
-	// To make this puzzle a bit more simple, we will load all the measurements into this slice.
-	// This gives us the ability to access the measurements via their indices.
-	var allMeasurements []int
-	for scanner.Scan() {
-		measurement, err := strconv.Atoi(scanner.Text())
+	// Convert `inputs` to an integer slice.
+	// Converting it "on the fly" would also be possible (and probably the more performant way),
+	// but it'd also make the code ugly.
+	// I guess in this case we want the beautiful code.
+	allMeasurements := make([]int, len(inputs))
+	for i, input := range inputs {
+		measurement, err := strconv.Atoi(input)
 		if err != nil {
 			return "Could not convert string to integer. Aborting."
 		}
 
-		allMeasurements = append(allMeasurements, measurement)
+		allMeasurements[i] = measurement
 	}
 
 	// In this part of the puzzle `prevMeasurement` will refer to the previous sum of our sliding window.
