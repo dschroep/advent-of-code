@@ -11,3 +11,27 @@ func FilterSlice(slice []string, condition func(string) bool) []string {
 
 	return result
 }
+
+// Returns the element with the smallest value of `slice`.
+func Min(slice []int) int {
+	minValue := slice[0]
+	for i := 1; i < len(slice); i++ {
+		if slice[i] < minValue {
+			minValue = slice[i]
+		}
+	}
+
+	return minValue
+}
+
+// Returns the element with the greatest value of `slice`.
+func Max(slice []int) int {
+	maxValue := slice[0]
+	for i := 1; i < len(slice); i++ {
+		if slice[i] > maxValue {
+			maxValue = slice[i]
+		}
+	}
+
+	return maxValue
+}
