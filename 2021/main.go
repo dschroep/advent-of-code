@@ -8,6 +8,7 @@ import (
 	_ "github.com/dschroep/advent-of-code/day5"
 	_ "github.com/dschroep/advent-of-code/day6"
 	_ "github.com/dschroep/advent-of-code/day7"
+	_ "github.com/dschroep/advent-of-code/day8"
 )
 
 func main() {}
