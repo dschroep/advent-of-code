@@ -1,4 +1,4 @@
-package day8
+package day9
 
 import "github.com/dschroep/advent-of-code/common"
 
