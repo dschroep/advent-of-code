@@ -31,50 +31,21 @@ func solveLvl1() string {
 
 	var errorScore int
 	for _, input := range inputs {
-		openingChars := make([]rune, 0)
+		var openingString string
 
-	CharacterLoop:
 		for _, character := range input {
-			switch character {
-			// Keep track of all the opening characters.
-			case '(':
-				fallthrough
-			case '[':
-				fallthrough
-			case '{':
-				fallthrough
-			case '<':
-				openingChars = append(openingChars, character)
-			// If we encounter a closing character, it has to match with the last opening character.
-			// If it does match, we remove the last member of `openingChars`.
-			// If it does not match, we encountered an error -> add to `errorScore` and move on to next line.
-			case ')':
-				if openingChars[len(openingChars)-1] != '(' {
-					errorScore += getErrorScoreForChar(character)
-					break CharacterLoop
+			if isOpeningChar(character) {
+				// Keep track of all the opening characters.
+				openingString += string(character)
+			} else {
+				// If we encounter a closing character, it has to match with the last opening character.
+				if isCorrectClosingChar(character, rune(openingString[len(openingString)-1])) {
+					// If it does match, we remove the last member of `openingChars`.
+					openingString = openingString[:len(openingString)-1]
 				} else {
-					openingChars = openingChars[:len(openingChars)-1]
-				}
-			case ']':
-				if openingChars[len(openingChars)-1] != '[' {
+					// If it does not match, we encountered an error -> add to score and move to next line.
 					errorScore += getErrorScoreForChar(character)
-					break CharacterLoop
-				} else {
-					openingChars = openingChars[:len(openingChars)-1]
-				}
-			case '}':
-				if openingChars[len(openingChars)-1] != '{' {
-					errorScore += getErrorScoreForChar(character)
-					break CharacterLoop
-				} else {
-					openingChars = openingChars[:len(openingChars)-1]
-				}
-			case '>':
-				if openingChars[len(openingChars)-1] != '<' {
-					errorScore += getErrorScoreForChar(character)
-					break CharacterLoop
-				} else {
-					openingChars = openingChars[:len(openingChars)-1]
+					break
 				}
 			}
 		}
