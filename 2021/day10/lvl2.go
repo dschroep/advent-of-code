@@ -55,24 +55,22 @@ func solveLvl2() string {
 	for _, input := range inputs {
 		var openingString string
 
-	CharacterLoop:
 		for charIndex, character := range input {
-			switch {
-			case isOpeningChar(character):
+			if isOpeningChar(character) {
 				openingString += string(character)
-			case isClosingChar(character):
+			} else {
 				// If we encounter a closing character, it has to match with the last opening character.
 				if isCorrectClosingChar(character, rune(openingString[len(openingString)-1])) {
 					// If it does match, we remove the last member of `openingChars`.
 					openingString = openingString[:len(openingString)-1]
 				} else {
 					// If it does not match, we encountered an error -> move on to next line.
-					break CharacterLoop
+					break
 				}
 			}
 
+			// Reached the last character -> calculate the completion score.
 			if charIndex == len(input)-1 {
-				// Reached the last character -> calculate the completion score.
 				completionString := getCompletionString(openingString)
 
 				var completionScore int

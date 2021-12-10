@@ -5,11 +5,6 @@ func isOpeningChar(char rune) bool {
 	return char == '(' || char == '[' || char == '{' || char == '<'
 }
 
-// Returns true if `char` is not an opening character.
-func isClosingChar(char rune) bool {
-	return !isOpeningChar(char)
-}
-
 // Returns true if `char` is the right closing character for `openingChar`.
 func isCorrectClosingChar(char rune, openingChar rune) bool {
 	switch {
