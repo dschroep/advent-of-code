@@ -22,7 +22,7 @@ func getErrorScoreForChar(char rune) int {
 	return 0
 }
 
-// Solves level 1 of day 8 and returns the result as printable message.
+// Solves level 1 of day 10 and returns the result as printable message.
 func solveLvl1() string {
 	inputs, err := common.GetFileInput(10)
 	if err != nil {

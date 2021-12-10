@@ -49,7 +49,7 @@ func getHeights(x, y int, inputs []string) (int, []int) {
 	return height, neighbors
 }
 
-// Solves level 1 of day 8 and returns the result as printable message.
+// Solves level 1 of day 9 and returns the result as printable message.
 func solveLvl1() string {
 	inputs, err := common.GetFileInput(9)
 	if err != nil {
