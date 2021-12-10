@@ -21,7 +21,7 @@ func solveLvl2() string {
 	for _, rawPosition := range rawPositions {
 		position, err := strconv.Atoi(rawPosition)
 		if err != nil {
-			return "Could not parse timer. Aborting."
+			return "Could not parse position. Aborting."
 		}
 
 		positions = append(positions, position)
