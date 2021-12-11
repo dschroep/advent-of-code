@@ -29,7 +29,7 @@ func solveLvl2() string {
 
 	// The ideal position has to be between the minimum and maximum position.
 	minPosition, maxPosition := common.Min(positions), common.Max(positions)
-	consumptions := make([]int, 0)
+	minConsumption := math.MaxInt
 	for testPosition := minPosition; testPosition <= maxPosition; testPosition++ {
 		var consumption int
 		for _, position := range positions {
@@ -38,8 +38,10 @@ func solveLvl2() string {
 			}
 		}
 
-		consumptions = append(consumptions, consumption)
+		if consumption < minConsumption {
+			minConsumption = consumption
+		}
 	}
 
-	return fmt.Sprintf("The least fuel consumption is %d.", common.Min(consumptions))
+	return fmt.Sprintf("The least fuel consumption is %d.", minConsumption)
 }
