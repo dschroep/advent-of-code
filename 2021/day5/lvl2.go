@@ -7,6 +7,7 @@ import (
 )
 
 // Solves level 2 of day 5 and returns the result as printable message.
+// FIXME: This does not work at the moment.
 func solveLvl2() string {
 	inputs, err := common.GetFileInput(5)
 	if err != nil {
