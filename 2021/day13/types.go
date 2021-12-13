@@ -1,5 +1,7 @@
 package day13
 
+import "strings"
+
 type Dot struct {
 	x int
 	y int
@@ -10,6 +12,39 @@ func (dot Dot) equals(other Dot) bool {
 }
 
 type Paper []Dot
+
+// Returns `paper` as a string representation.
+// TODO: There has to be a more elegant way for this.
+func (paper Paper) toString() string {
+	// Find out how large the string has to be.
+	var maxX, maxY int
+	for _, dot := range paper {
+		if dot.x > maxX {
+			maxX = dot.x
+		}
+		if dot.y > maxY {
+			maxY = dot.y
+		}
+	}
+
+	var byteRepresentation [][]byte
+	for y := 0; y <= maxY; y++ {
+		byteRepresentation = append(byteRepresentation, []byte(strings.Repeat(".", maxX+1)))
+	}
+
+	for _, dot := range paper {
+		byteRepresentation[dot.y][dot.x] = '#'
+	}
+
+	var stringRepresentation string
+	for _, line := range byteRepresentation {
+		// The three tabs at the beginning of a line aren't necessary, but they integrate the result well into the overall output.
+		// I know, it's not beautiful to make this receiver function for only one purpose but ¯\_(ツ)_/¯
+		stringRepresentation += "\t\t\t" + string(line) + "\n"
+	}
+
+	return stringRepresentation
+}
 
 // Returns the total amount of dots, but counts overlapping dots only once.
 func (paper Paper) countUnique() int {
