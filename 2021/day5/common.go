@@ -77,29 +77,31 @@ func getYDirection(line Line) int {
 	return -1
 }
 
-// Marks all the coordinates, that `line` passes on `corSys`.
-// `rowSize` is needed because `corSys` is a flat representation of two dimensions.
+// Marks all the coordinates, that `line` passes, on `corSys`.
 // Returns the changed version of `corSys`.
-func markCoordinates(line Line, corSys []byte, rowSize int) []byte {
+func markCoordinates(line Line, corSys [][]byte) [][]byte {
 	if isHorizontal(line) {
 		minX := math.Min(float64(line.start.x), float64(line.end.x))
 		maxX := math.Max(float64(line.start.x), float64(line.end.x))
 		for x := minX; x <= maxX; x++ {
-			corSys[line.start.y*rowSize+int(x)]++
+			corSys[line.start.y][int(x)]++
 		}
 	} else if isVertical(line) {
 		minY := math.Min(float64(line.start.y), float64(line.end.y))
 		maxY := math.Max(float64(line.start.y), float64(line.end.y))
 		for y := minY; y <= maxY; y++ {
-			corSys[int(y)*rowSize+line.start.x]++
+			corSys[int(y)][line.start.x]++
 		}
 	} else {
 		xDirection := getXDirection(line)
 		yDirection := getYDirection(line)
 
 		for x, y := line.start.x, line.start.y; x != line.end.x && y != line.end.y; x, y = x+xDirection, y+yDirection {
-			corSys[y*rowSize+x]++
+			corSys[y][x]++
 		}
+
+		// Line's end wasn't marked yet...
+		corSys[line.end.y][line.end.x]++
 	}
 
 	return corSys

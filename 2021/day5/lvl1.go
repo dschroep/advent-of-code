@@ -41,19 +41,23 @@ func solveLvl1() string {
 		}
 	}
 
-	// This is our one-dimensional coordinate system.
-	// Note that we need to add 1 to `maxX` and `maxY`, because they're refering to indices - not lengths.
-	corSys := make([]byte, (maxX+1)*(maxY+1))
+	corSys := make([][]byte, maxY+1)
+	for row := range corSys {
+		corSys[row] = make([]byte, maxX+1)
+	}
+
 	for _, line := range allLines {
-		corSys = markCoordinates(line, corSys, maxX+1)
+		corSys = markCoordinates(line, corSys)
 	}
 
 	// Now that our coordinate system is filled with values,
 	// we only need to figure out how many elements of it are `>= 2`.
 	var amountDangPoints int
-	for _, dangerLevel := range corSys {
-		if dangerLevel >= 2 {
-			amountDangPoints++
+	for _, row := range corSys {
+		for _, dangerLevel := range row {
+			if dangerLevel >= 2 {
+				amountDangPoints++
+			}
 		}
 	}
 
