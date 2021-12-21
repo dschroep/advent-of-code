@@ -27,24 +27,23 @@ func solveLvl1() string {
 		allBoards = append(allBoards, newBoard)
 	}
 
-	// The first line of `inputs` holds the called out numbers
+	// The first line of `inputs` holds the called out numbers.
 	var lastCalledOutNumber int
+	var winningBoard Board
 	for _, calledOutNumber := range strings.Split(inputs[0], ",") {
 		markNumber(allBoards, calledOutNumber)
 
-		if didWin(allBoards) {
+		winningBoardIndices := getWinningBoards(allBoards)
+		if len(winningBoardIndices) > 0 {
 			lastCalledOutNumber, err = strconv.Atoi(calledOutNumber)
 			if err != nil {
 				return "Could not parse last called out number. Aborting."
 			}
 
+			winningBoard = allBoards[winningBoardIndices[0]]
+
 			break
 		}
-	}
-
-	winningBoard, err := getWinningBoard(allBoards)
-	if err != nil {
-		return "Assumed there was a winning board, but there was none. Aborting."
 	}
 
 	sum, err := getUnmarkedSum(winningBoard)

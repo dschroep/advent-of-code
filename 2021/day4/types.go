@@ -9,3 +9,10 @@ type BoardElement struct {
 }
 
 type Board [5][5]BoardElement
+
+type WinEvent struct {
+	// The ``Board`` at the moment it won.
+	board Board
+	// The number which made the board win.
+	lastCalledOut int
+}
