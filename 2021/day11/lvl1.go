@@ -6,120 +6,104 @@ import (
 	"github.com/dschroep/advent-of-code/common"
 )
 
-type Octopus struct {
-	// Current energy level
-	energyLevel int
-	// If this ``Octopus`` flashed during a step. Should be set to `false` after a step.
-	flashed bool
-}
-type OctopusField [10][10]Octopus
-
-// Increases the energy level of all ``Octopus`` in `field` by 1.
-func (field *OctopusField) increaseAll() {
-	for rowIndex, row := range field {
-		for columnIndex := range row {
-			field[rowIndex][columnIndex].energyLevel++
-		}
-	}
-}
-
-// Let's the specified ``Octopus`` flash, if possible.
-// Will start a chain reaction.
-func (field *OctopusField) flash(row, column int) {
-	octopus := &field[row][column]
-
-	// Check if `octopus` qualifies for a flash.
-	// Does it have the needed energy level and didn't it flash already?
-	if octopus.energyLevel < 10 || octopus.flashed {
-		return
-	}
-
-	// `octopus` qualifies for a flash.
-	octopus.flashed = true
-
-	// Increase the energy levels of the surrounding ``Octopus``.
-	for neighborRow := -1; neighborRow <= 1; neighborRow++ {
-		for neighborCol := -1; neighborCol <= 1; neighborCol++ {
-			if neighborRow == 0 && neighborCol == 0 {
-				// This is not a neighbor, this is `octopus`.
-				continue
-			}
-
-			// Check if the selected neighbor even exists.
-			if row > 0 && row < 9 && column > 0 && column < 9 {
-				neighbor := &field[row+neighborRow][column+neighborCol]
-				neighbor.energyLevel++
-
-				field.flash(row+neighborRow, column+neighborCol)
-			}
-		}
-	}
-}
-
-// Let's all ``Octopus`` flash, if possible.
-// Returns the total amount of flashes.
-func (field *OctopusField) flashFlashable() int {
-	// Flash all
-	for rowIndex, row := range field {
-		for columnIndex := range row {
-			field.flash(rowIndex, columnIndex)
+// Increases the energy level of all ``Octopus`` in `octopusField` by 1 and returns the result.
+func increaseAll(octopusField OctopusField) OctopusField {
+	for rowIndex, row := range octopusField {
+		for colIndex := range row {
+			octopusField[rowIndex][colIndex].energyLevel++
 		}
 	}
 
-	// Now count which ``Octopus`` are flashed
-	var flashAmount int
-	for _, row := range field {
-		for _, octopus := range row {
-			if octopus.flashed {
-				flashAmount++
+	return octopusField
+}
+
+// Let's all ``Octopus`` with an energy level greater than 9 flash.
+// Also starts a chain reaction if necessary.
+// Returns the modified `octopusField` and the total amount of flashes.
+func flashFlashable(octopusField OctopusField) (OctopusField, int) {
+	totalFlashes := 0
+
+	for rowIndex, row := range octopusField {
+		for colIndex := range row {
+			currentOctopus := &octopusField[rowIndex][colIndex]
+
+			if currentOctopus.energyLevel > 9 && !currentOctopus.flashed {
+				currentOctopus.flashed = true
+				totalFlashes++
+
+				// Increase energy level of all neighbors.
+				for neighborRow := rowIndex - 1; neighborRow <= rowIndex+1; neighborRow++ {
+					for neighborCol := colIndex - 1; neighborCol <= colIndex+1; neighborCol++ {
+						if neighborCol == colIndex && neighborRow == rowIndex {
+							// This is not a neighbor, this is `currentOctopus`
+							continue
+						}
+
+						if neighborRow >= 0 && neighborRow <= len(octopusField)-1 && neighborCol >= 0 && neighborCol <= len(octopusField[neighborRow])-1 {
+							octopusField[neighborRow][neighborCol].energyLevel++
+						}
+					}
+				}
+
+				newFlashes := 0
+				octopusField, newFlashes = flashFlashable(octopusField)
+				totalFlashes += newFlashes
 			}
 		}
 	}
 
-	return flashAmount
+	return octopusField, totalFlashes
 }
 
-// Resets all ``Octopus`` in `field`, that flashed.
-func (field *OctopusField) resetFlashed() {
-	for rowIndex, row := range field {
-		for columnIndex := range row {
-			if field[rowIndex][columnIndex].flashed {
-				field[rowIndex][columnIndex] = Octopus{0, false}
+// Resets all ``Octopus`` in `octopusField` that flashed and returns the result.
+func resetFlashed(octopusField OctopusField) OctopusField {
+	for rowIndex, row := range octopusField {
+		for colIndex := range row {
+			currentOctopus := &octopusField[rowIndex][colIndex]
+
+			if currentOctopus.flashed {
+				*currentOctopus = Octopus{0, false}
 			}
 		}
 	}
+
+	return octopusField
 }
 
-// Simulates one entire step and returns the amount of flashes that occured.
-func (field *OctopusField) simulateStep() int {
-	field.increaseAll()
-	flashAmount := field.flashFlashable()
-	field.resetFlashed()
+// Simulates a step on `octopusField` and returns the modified `octopusField` as well as the total amount of flashes.
+func simulateStep(octopusField OctopusField) (OctopusField, int) {
+	totalFlashes := 0
 
-	return flashAmount
+	octopusField = increaseAll(octopusField)
+	octopusField, totalFlashes = flashFlashable(octopusField)
+	octopusField = resetFlashed(octopusField)
+
+	return octopusField, totalFlashes
 }
 
 // Solves level 1 of day 11 and returns the result as printable message.
-// FIXME: This does not work at the moment, but I have absolutely no clue why...
 func solveLvl1() string {
 	inputs, err := common.GetFileInput(11)
 	if err != nil {
 		return "Could not open input file. Aborting."
 	}
 
-	// Init OctopusField.
-	octopusField := new(OctopusField)
+	// Init `octopusField`.
+	octopusField := OctopusField{}
 	for rowIndex, row := range inputs {
+		octopusField = append(octopusField, make([]Octopus, len(row)))
+
 		for columnIndex, energyLevel := range row {
 			octopusField[rowIndex][columnIndex] = Octopus{int(energyLevel - '0'), false}
 		}
 	}
 
-	// Simulate the 100 steps.
-	var flashAmount int
+	totalFlashes := 0
 	for step := 0; step < 100; step++ {
-		flashAmount += octopusField.simulateStep()
+		newFlashes := 0
+		octopusField, newFlashes = simulateStep(octopusField)
+		totalFlashes += newFlashes
 	}
 
-	return fmt.Sprintf("There were %d flashes after 100 steps.", flashAmount)
+	return fmt.Sprintf("There were %d flashes after 100 steps.", totalFlashes)
 }
