@@ -56,18 +56,3 @@ func (path Path) lastCave() Cave {
 func (path Path) ended() bool {
 	return path.lastCave() == END
 }
-
-// Returns true if `path` does not contain a small cave multiple times.
-func (path Path) valid() bool {
-	for i, cave := range path {
-		if cave.small() {
-			for j := i + 1; j < len(path); j++ {
-				if cave.equals(path[j]) {
-					return false
-				}
-			}
-		}
-	}
-
-	return true
-}
