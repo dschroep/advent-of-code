@@ -1,51 +1,73 @@
 package day12
 
-// Abstraction of a cave to its name.
+// Special caves.
+const (
+	START Cave = "start"
+	END   Cave = "end"
+)
+
+// Name of a cave.
 type Cave string
 
-// Checks whether a cave is big or small based on its name.
-func (cave Cave) isBig() bool {
-	return cave[0] >= 'A' && cave[0] <= 'Z'
+// Returns true if both ``Cave``s have the same value.
+func (cave Cave) equals(other Cave) bool {
+	return string(cave) == string(other)
 }
 
-// A connection from one ``Cave`` to another.
+// Returns true if `cave` is small.
+func (cave Cave) small() bool {
+	return cave[0] >= 'a' && cave[0] <= 'z'
+}
+
+// Representation of a connection of two caves (like one line of input).
+// Note that this cannot have an order.
+// "start" could also be `Connection.b` and "end" could be `Connection.a`.
 type Connection struct {
 	a Cave
 	b Cave
 }
 
-// Returns the members of `connections` that contain `cave` either as `Connection.a` or `Connection.b`.
-func filterForCave(connections []Connection, cave Cave) []Connection {
-	result := make([]Connection, 0)
-	for _, connection := range connections {
-		if connection.a == cave || connection.b == cave {
-			result = append(result, connection)
-		}
+// Returns the opposite of `cave` in `connection`.
+func (connection Connection) getOpposite(cave Cave) Cave {
+	if connection.a.equals(cave) {
+		return connection.b
 	}
 
-	return result
+	return connection.a
 }
 
-// A path from the "start" ``Cave`` to the "end" ``Cave``.
+// Representation of a path like "start,A,c,A,end"
 type Path []Cave
 
-// Returns `true` if the last element of `path` is the "end" ``Cave``
-func (path Path) ended() bool {
-	return path[len(path)-1] == NAME_END
+// Returns a copy of `path`, which got `cave` appended.
+func (path Path) createBranch(cave Cave) Path {
+	newPath := make(Path, len(path))
+	copy(newPath, path)
+
+	return append(newPath, cave)
 }
 
-// Returns `true` if `path` already contains `to`.
-func (path Path) alreadyWentThere(to Cave) bool {
-	for _, cave := range path {
-		if cave == to {
-			return true
+// Returns `path`'s last ``Cave``.
+func (path Path) lastCave() Cave {
+	return path[len(path)-1]
+}
+
+// Returns true if `path`'s last cave is `END`.
+func (path Path) ended() bool {
+	return path.lastCave() == END
+}
+
+// Returns true if `path` does not contain a small cave multiple times.
+func (path Path) valid() bool {
+	for i, cave := range path {
+		if cave.small() {
+			for j := i + 1; j < len(path); j++ {
+				if cave.equals(path[j]) {
+					return false
+				}
+			}
 		}
 	}
 
-	return false
-}
-
-// Returns a copy of `path`, where `cave` was appended.
-func (path Path) branchPath(cave Cave) Path {
-	return append(path, cave)
+	return true
 }
