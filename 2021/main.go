@@ -7,6 +7,7 @@ import (
 	_ "github.com/dschroep/advent-of-code/day12"
 	_ "github.com/dschroep/advent-of-code/day13"
 	_ "github.com/dschroep/advent-of-code/day14"
+	_ "github.com/dschroep/advent-of-code/day17"
 	_ "github.com/dschroep/advent-of-code/day2"
 	_ "github.com/dschroep/advent-of-code/day3"
 	_ "github.com/dschroep/advent-of-code/day4"
